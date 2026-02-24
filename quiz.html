@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Làm Quiz</title>
+  <title>Science Quiz - Thử thách</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <div id="loading" class="loading">
       <div class="spinner"></div>
-      <p>Đang tải quiz...</p>
+      <p>⚛️ Đang tải câu hỏi...</p>
     </div>
 
     <div id="quiz-container" style="display: none;">
@@ -30,17 +30,17 @@
       <div class="quiz-footer">
         <button id="prev-btn" onclick="prevQuestion()" disabled>← Câu trước</button>
         <button id="next-btn" onclick="nextQuestion()">Câu tiếp →</button>
-        <button id="submit-btn" onclick="submitQuiz()" style="display: none;">Nộp bài</button>
+        <button id="submit-btn" onclick="submitQuiz()" style="display: none;">🚀 Nộp bài</button>
       </div>
     </div>
 
     <div id="result-container" style="display: none;">
       <div class="result-card">
-        <h1>Kết quả bài làm</h1>
+        <h1>⚛️ Kết quả thí nghiệm</h1>
         <div id="score-circle"></div>
         <p id="score-text"></p>
-        <button onclick="location.reload()">Làm lại</button>
-        <button onclick="location.href='/'">Về trang chủ</button>
+        <button onclick="location.reload()">🔄 Thử lại</button>
+        <button onclick="location.href='/'">🏠 Trang chủ</button>
       </div>
 
       <div id="answers-review"></div>

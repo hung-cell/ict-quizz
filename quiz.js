@@ -118,44 +118,46 @@ function submitQuiz() {
 function displayResults(score, correctCount, results) {
   document.getElementById('quiz-container').style.display = 'none';
   document.getElementById('result-container').style.display = 'block';
-  
+
   // Display score
   const scoreCircle = document.getElementById('score-circle');
   scoreCircle.textContent = score + '%';
-  scoreCircle.style.background = score >= 50 ? '#d1fae5' : '#fee2e2';
-  scoreCircle.style.color = score >= 50 ? '#10b981' : '#ef4444';
-  
+  scoreCircle.style.background = score >= 50 ? 'rgba(0, 255, 136, 0.1)' : 'rgba(255, 68, 102, 0.1)';
+  scoreCircle.style.color = score >= 50 ? '#00ff88' : '#ff4466';
+  scoreCircle.style.borderColor = score >= 50 ? '#00ff88' : '#ff4466';
+  scoreCircle.style.boxShadow = score >= 50 ? '0 0 30px rgba(0, 255, 136, 0.3)' : '0 0 30px rgba(255, 68, 102, 0.3)';
+
   const scoreText = document.getElementById('score-text');
   scoreText.innerHTML = `
-    Bạn trả lời đúng <strong>${correctCount}</strong> / ${quizData.questions.length} câu<br>
-    ${score >= 50 ? '🎉 Chúc mừng! Bạn đã đạt!' : '💪 Cố gắng hơn lần sau nhé!'}
+    Bạn trả lời đúng <strong style="color: #00ff88">${correctCount}</strong> / ${quizData.questions.length} câu<br>
+    ${score >= 50 ? '🎉 Xuất sắc! Bạn là nhà khoa học thực thụ!' : '💪 Tiếp tục khám phá nhé!'}
   `;
-  
+
   // Display detailed answers
   const reviewContainer = document.getElementById('answers-review');
-  reviewContainer.innerHTML = '<h2 style="color:#333; margin-bottom:20px;">Chi tiết đáp án</h2>';
-  
+  reviewContainer.innerHTML = '<h2>📊 Phân tích chi tiết</h2>';
+
   results.forEach((result, index) => {
     const answerDiv = document.createElement('div');
     answerDiv.className = `answer-item ${result.isCorrect ? 'correct' : 'wrong'}`;
-    
+
     let optionsHTML = '';
     result.options.forEach((opt, i) => {
       let className = '';
       if (i === result.correctAnswer) className = 'correct-answer';
       if (i === result.userAnswer && !result.isCorrect) className = 'user-wrong';
-      
+
       optionsHTML += `<div class="answer-option ${className}">${String.fromCharCode(65 + i)}. ${opt}</div>`;
     });
-    
+
     answerDiv.innerHTML = `
       <h3 style="margin-bottom:15px;">${result.isCorrect ? '✅' : '❌'} Câu ${index + 1}: ${result.question}</h3>
       ${optionsHTML}
       <div class="explanation">
-        <strong>💡 Giải thích:</strong> ${result.explanation}
+        <strong>🔬 Giải thích:</strong> ${result.explanation}
       </div>
     `;
-    
+
     reviewContainer.appendChild(answerDiv);
   });
 }
