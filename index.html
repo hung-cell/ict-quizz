@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICTutor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!--Comment trene tung dong-->
+    <h1>🎓 ICTutor</h1>
+    <p class="subtitle">Học ICT lớp 7 với AI và làm quiz tự động</p>
+    
+    <div class="card">
+      <h2>💬 Bắt đầu học với AI</h2>
+      <p>Click vào icon chat ở góc dưới để:</p>
+      <ul>
+        <li>Hỏi đáp về kiến thức ICT</li>
+        <li>Tạo quiz tự động từ bài học</li>
+        <li>Làm bài và xem kết quả ngay</li>
+      </ul>
+    </div>
+
+    <!-- Chatling Inline Bot -->
+    <div id="chtl-inline-bot" style="width: 100%; height: 500px; margin-top: 2rem;"></div>
+  </div>
+
+  <!-- Chatling Widget Script -->
+  <script>
+    window.chtlConfig = { 
+      chatbotId: "9742573297", 
+      display: "page_inline" 
+    };
+  </script>
+  <script async data-id="9742573297" data-display="page_inline" id="chtl-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
+</body>
+</html>

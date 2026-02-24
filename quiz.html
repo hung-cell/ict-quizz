@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Làm Quiz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Đang tải quiz...</p>
+    </div>
+
+    <div id="quiz-container" style="display: none;">
+      <div class="quiz-header">
+        <h1 id="quiz-topic"></h1>
+        <div class="progress-bar">
+          <div id="progress" class="progress"></div>
+        </div>
+        <p id="question-counter"></p>
+      </div>
+
+      <div class="quiz-content">
+        <h2 id="question-text"></h2>
+        <div id="options-container"></div>
+      </div>
+
+      <div class="quiz-footer">
+        <button id="prev-btn" onclick="prevQuestion()" disabled>← Câu trước</button>
+        <button id="next-btn" onclick="nextQuestion()">Câu tiếp →</button>
+        <button id="submit-btn" onclick="submitQuiz()" style="display: none;">Nộp bài</button>
+      </div>
+    </div>
+
+    <div id="result-container" style="display: none;">
+      <div class="result-card">
+        <h1>Kết quả bài làm</h1>
+        <div id="score-circle"></div>
+        <p id="score-text"></p>
+        <button onclick="location.reload()">Làm lại</button>
+        <button onclick="location.href='/'">Về trang chủ</button>
+      </div>
+
+      <div id="answers-review"></div>
+    </div>
+  </div>
+
+  <script src="quiz.js"></script>
+</body>
+</html>
+
+
+
+
