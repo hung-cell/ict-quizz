@@ -43,7 +43,7 @@ export default async function handler(req, res) {
       messages: [
         {
           role: 'system',
-          content: `Bạn là giáo viên ICT lớp 7. Tạo quiz tiếng Việt với format JSON:
+          content: `Bạn là giáo viên Khoa học. Tạo quiz tiếng Việt về Vật lý, Hóa học, Sinh học với format JSON:
 {
   "questions": [
     {
