@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Làm Quiz</title>
+  <title>Làm Quiz - ICTutor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
+  <div class="app-shell">
     <div id="loading" class="loading">
       <div class="spinner"></div>
       <p>Đang tải quiz...</p>
@@ -28,9 +31,15 @@
       </div>
 
       <div class="quiz-footer">
-        <button id="prev-btn" onclick="prevQuestion()" disabled>← Câu trước</button>
-        <button id="next-btn" onclick="nextQuestion()">Câu tiếp →</button>
-        <button id="submit-btn" onclick="submitQuiz()" style="display: none;">Nộp bài</button>
+        <button id="prev-btn" onclick="prevQuestion()" disabled>
+          <span>← Câu trước</span>
+        </button>
+        <button id="next-btn" onclick="nextQuestion()">
+          <span>Câu tiếp →</span>
+        </button>
+        <button id="submit-btn" onclick="submitQuiz()" style="display: none;">
+          <span>Nộp bài</span>
+        </button>
       </div>
     </div>
 
@@ -39,8 +48,10 @@
         <h1>Kết quả bài làm</h1>
         <div id="score-circle"></div>
         <p id="score-text"></p>
-        <button onclick="location.reload()">Làm lại</button>
-        <button onclick="location.href='/'">Về trang chủ</button>
+        <div>
+          <button onclick="location.reload()">Làm lại</button>
+          <button onclick="location.href='/'">Về trang chủ</button>
+        </div>
       </div>
 
       <div id="answers-review"></div>
@@ -50,7 +61,3 @@
   <script src="quiz.js"></script>
 </body>
 </html>
-
-
-
-

@@ -33,10 +33,41 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
     
-    const { topic, context, num_questions = 10, difficulty = 'medium' } = req.body;
-    
-    console.log('Generating quiz for:', topic);
-    
+    const { topic, context, num_questions = 10, difficulty = 'medium', image } = req.body;
+
+    console.log('Generating quiz for:', topic, image ? 'with image' : '');
+
+    // Build user message content
+    let userContent = [];
+
+    // Add image if provided (GPT-4 Vision)
+    if (image) {
+      // Check if image is URL or base64
+      if (image.startsWith('http')) {
+        userContent.push({
+          type: 'image_url',
+          image_url: { url: image }
+        });
+      } else {
+        // Assume base64 - add data URI prefix if missing
+        const base64Image = image.startsWith('data:') ? image : `data:image/jpeg;base64,${image}`;
+        userContent.push({
+          type: 'image_url',
+          image_url: { url: base64Image }
+        });
+      }
+    }
+
+    // Add text prompt
+    const textPrompt = image
+      ? `Phân tích hình ảnh và tạo ${num_questions} câu hỏi trắc nghiệm ở mức ${difficulty} dựa trên nội dung hình ảnh${topic ? ` về chủ đề "${topic}"` : ''}.${context ? `\n\nThông tin thêm: ${context}` : ''}`
+      : `Tạo ${num_questions} câu hỏi về "${topic}" ở mức ${difficulty}.\n\nNội dung: ${context}`;
+
+    userContent.push({
+      type: 'text',
+      text: textPrompt
+    });
+
     // Generate quiz
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o',
@@ -57,7 +88,7 @@ export default async function handler(req, res) {
         },
         {
           role: 'user',
-          content: `Tạo ${num_questions} câu hỏi về "${topic}" ở mức ${difficulty}.\n\nNội dung: ${context}`
+          content: userContent
         }
       ],
       temperature: 0.7,
@@ -68,11 +99,11 @@ export default async function handler(req, res) {
     
     // Create quiz object
     const quiz = {
-      topic,
+      topic: topic || (image ? 'Quiz từ hình ảnh' : 'Quiz'),
       difficulty,
       questions: quizData.questions
     };
-    
+
     // Encode quiz data
     const encodedData = encodeURIComponent(JSON.stringify(quiz));
     const baseUrl = process.env.VERCEL_URL
@@ -82,11 +113,13 @@ export default async function handler(req, res) {
       : 'https://your-app.vercel.app';
 
     const quizUrl = `${baseUrl}/quiz.html?id=${Date.now()}&data=${encodedData}`;
-    
+
+    const topicDisplay = topic || (image ? 'từ hình ảnh' : topic);
+
     return res.status(200).json({
       success: true,
       quiz_url: quizUrl,
-      message: `✅ Quiz về "${topic}" đã sẵn sàng!\n\n📝 ${num_questions} câu hỏi\n\n👉 Làm bài: ${quizUrl}`
+      message: `✅ Quiz ${topicDisplay} đã sẵn sàng!\n\n📝 ${num_questions} câu hỏi\n\n👉 Làm bài: ${quizUrl}`
     });
     
   } catch (error) {
