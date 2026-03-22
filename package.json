@@ -1,0 +1,14 @@
+{
+  "name": "ict-quizz",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.0",
+    "openai": "^4.0.0",
+    "bcryptjs": "^2.4.3"
+  }
+}

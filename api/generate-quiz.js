@@ -27,12 +27,6 @@ export default async function handler(req, res) {
   }
   
   try {
-    // Verify secret
-    const authHeader = req.headers.authorization;
-    if (authHeader !== `Bearer ${process.env.CHATLING_SECRET}`) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-    
     const { topic, context, num_questions = 10, difficulty = 'medium', image } = req.body;
 
     console.log('Generating quiz for:', topic, image ? 'with image' : '');
@@ -106,11 +100,10 @@ export default async function handler(req, res) {
 
     // Encode quiz data
     const encodedData = encodeURIComponent(JSON.stringify(quiz));
-    const baseUrl = process.env.VERCEL_URL
-      ? process.env.VERCEL_URL.startsWith('http')
-        ? process.env.VERCEL_URL
-        : `https://${process.env.VERCEL_URL}`
-      : 'https://your-app.vercel.app';
+    
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const host = req.headers.host || 'localhost:3000';
+    const baseUrl = `${protocol}://${host}`;
 
     const quizUrl = `${baseUrl}/quiz.html?id=${Date.now()}&data=${encodedData}`;
 

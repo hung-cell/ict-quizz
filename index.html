@@ -302,21 +302,55 @@
     };
   </script>
   <script async data-id="9742573297" data-display="page_inline" id="chtl-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
+  <script>
+    function resizeChatlingIframe() {
+      const container = document.getElementById('chtl-inline-bot');
+      if (container) {
+        container.style.height = '500px';
+        container.style.minHeight = '500px';
+        const iframe = container.querySelector('iframe');
+        if (iframe) {
+          iframe.style.height = '500px';
+          iframe.style.minHeight = '500px';
+          iframe.style.width = '100%';
+        }
+      }
+    }
+    setInterval(resizeChatlingIframe, 500);
+    window.addEventListener('load', resizeChatlingIframe);
+  </script>
 
   <!-- Image Upload Script -->
   <script>
-    // Check login state
-    const user = localStorage.getItem('ictutor_user');
-    if (user) {
-      const userData = JSON.parse(user);
+    function getSession() {
+      const session = localStorage.getItem('ictutor_session');
+      if (!session) return null;
+      
+      const data = JSON.parse(session);
+      if (Date.now() > data.expiresAt) {
+        localStorage.removeItem('ictutor_session');
+        return null;
+      }
+      return data;
+    }
+    
+    function logout() {
+      localStorage.removeItem('ictutor_session');
+      window.location.href = '/login.html';
+    }
+    
+    const session = getSession();
+    
+    if (!session) {
+      window.location.href = '/login.html';
+    } else {
       document.getElementById('auth-section').style.display = 'none';
       document.getElementById('user-banner').style.display = 'flex';
-      document.getElementById('user-name').textContent = userData.name;
-    }
-
-    function logout() {
-      localStorage.removeItem('ictutor_user');
-      window.location.reload();
+      document.getElementById('user-name').textContent = session.user.name;
+      
+      if (session.isGuest) {
+        document.getElementById('user-name').textContent += ' (Khách)';
+      }
     }
 
     const imageQuizBtn = document.getElementById('image-quiz-btn');
@@ -429,7 +463,10 @@
         const data = await response.json();
 
         if (data.success) {
-          window.open(data.quiz_url, '_blank');
+          const goToQuiz = confirm('✅ Tạo quiz thành công!\n\nBạn có muốn chuyển sang trang làm quiz không?');
+          if (goToQuiz) {
+            window.open(data.quiz_url, '_blank');
+          }
           closeModal();
           removeImageBtn.click();
         } else {
