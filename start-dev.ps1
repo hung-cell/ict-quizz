@@ -1,15 +1,13 @@
-# PowerShell script to start Vercel dev with environment variables
-$env:OPENAI_API_KEY="a7f3d8e2b9c4f6a1d8e5b2c9f7a3d6e1b8c4f9a2d7e3b6c1f8a4d9e2b7c5f3a8"
-$env:CHATLING_SECRET="a7f3d8e2b9c4f6a1d8e5b2c9f7a3d6e1b8c4f9a2d7e3b6c1f8a4d9e2b7c5f3a8"
-$env:VERCEL_URL="http://localhost:3000"
-vercel dev
+# PowerShell script to start Vercel dev with environment variables from .env.local
 
+# Read .env.local file and set environment variables
+Get-Content .env.local | ForEach-Object {
+    if ($_ -match '^(.*?)=(.*)$') {
+        $name = $matches[1]
+        $value = $matches[2]
+        [System.Environment]::SetEnvironmentVariable($name, $value, "Process")
+    }
+}
 
-
-
-
-
-
-
-
-
+# Run Vercel dev with token from environment
+npx vercel dev --token $env:VERCEL_TOKEN --yes

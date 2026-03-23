@@ -1,4 +1,4 @@
-import sql from './db.js';
+import { supabase } from './db.js';
 import bcrypt from 'bcryptjs';
 
 export default async function handler(req, res) {
@@ -25,26 +25,31 @@ export default async function handler(req, res) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const result = await sql`
-      INSERT INTO users (email, password, name)
-      VALUES (${email}, ${hashedPassword}, ${name || null})
-      RETURNING id, email, name, created_at
-    `;
+    const { data, error } = await supabase
+      .from('users')
+      .insert({
+        email,
+        password: hashedPassword,
+        name: name || null
+      })
+      .select('id, email, name, created_at');
+
+    if (error) {
+      if (error.code === '23505') {
+        return res.status(409).json({
+          error: 'Email already exists'
+        });
+      }
+      throw error;
+    }
 
     return res.status(201).json({
       success: true,
       message: 'User created successfully',
-      user: result[0]
+      user: data[0]
     });
   } catch (error) {
     console.error('Signup error:', error);
-    
-    if (error.code === '23505') {
-      return res.status(409).json({
-        error: 'Email already exists'
-      });
-    }
-
     return res.status(500).json({
       error: error.message
     });

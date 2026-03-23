@@ -1,4 +1,4 @@
-import sql from './db.js';
+import { supabase } from './db.js';
 import bcrypt from 'bcryptjs';
 
 export default async function handler(req, res) {
@@ -23,13 +23,14 @@ export default async function handler(req, res) {
       });
     }
 
-    const users = await sql`
-      SELECT id, email, password, name, created_at
-      FROM users
-      WHERE email = ${email}
-    `;
+    const { data: users, error: fetchError } = await supabase
+      .from('users')
+      .select('id, email, password, name, created_at')
+      .eq('email', email);
 
-    if (users.length === 0) {
+    if (fetchError) throw fetchError;
+
+    if (!users || users.length === 0) {
       return res.status(401).json({
         error: 'Invalid email or password'
       });
@@ -49,10 +50,16 @@ export default async function handler(req, res) {
     const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
     const userAgent = req.headers['user-agent'] || 'unknown';
 
-    await sql`
-      INSERT INTO login_history (user_id, email, ip_address, user_agent)
-      VALUES (${user.id}, ${user.email}, ${ipAddress}, ${userAgent})
-    `;
+    const { error: logError } = await supabase
+      .from('login_history')
+      .insert({
+        user_id: user.id,
+        email: user.email,
+        ip_address: ipAddress,
+        user_agent: userAgent
+      });
+
+    if (logError) console.error('Login history error:', logError);
 
     return res.status(200).json({
       success: true,
